@@ -15,7 +15,7 @@ Z:        DS        2
 
 ; MAIN
           ORG       ROM
-
+          LD        SP, RAM+0FFFH
 
 ; INIT
 INIT: 
@@ -36,11 +36,6 @@ INIT:
           
           LD A,007H
           OUT (PIO_BC),A
-          RET
-
-; STACK_INIT
-STACK_INIT:
-          LD        SP, RAM+0FFFH
           RET
 
           END

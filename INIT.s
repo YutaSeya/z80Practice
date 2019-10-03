@@ -8,13 +8,8 @@ PIO_BC    EQU       01FH
 
 ;MAIN
           ORG       ROM
-
-          CALL      STACK_INIT
-
-; STACK_INIT  
-STACK_INIT:
           LD        SP, RAM+0FFFH
-          RET
+          CALL      STACK_INIT
 
 ; PIO_INIT
 PIO_INIT: 

@@ -11,43 +11,45 @@ Z:        DS        2
 ; MAIN 
           ORG       ROM
 
-          CALL      STACK_INIT
+          LD        SP, RAM+0FFFH
           CALL      MUL_XY
 
           HALT
 
-; STACK_INIT
-STACK_INIT:
-          LD        SP, RAM+0FFFH
-          RET
-
 MUL_XY:
+          PUSH      AF
           PUSH      BC
           PUSH      DE
           PUSH      HL
 
           LD        BC, (Y)
           LD        DE, (X)
-          LD        HL, 0
-          LD        C, 16
+          LD        HL, 0000H
+          LD        A,  10H
 
 MUL_LOOP:
           ; HLレジスタを左にシフト
-          SLA       HL
+          SLA       L
+          RL        H
+
+          ; overflow
+
           ; BCレジスタを左にシフト
-          SLA       BC
+          SLA       C
+          RL        B
           ; Cレジスタの値を減らす
-          DEC       C
+          DEC       A
 
           CALL      C, ADD_HL
 
           JP        NZ, MUL_LOOP
 
-          LD        (Z), HL
+          LD        (X), HL
 
           POP       HL
           POP       DE
           POP       BC
+          POP       AF
           RET
 
 ADD_HL:
@@ -55,3 +57,4 @@ ADD_HL:
           RET
 
           END
+

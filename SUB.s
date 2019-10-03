@@ -11,28 +11,29 @@ Z:        DS        2
 ; MAIN 
           ORG       ROM
 
-          CALL      STACK_INIT
+          LD        SP, RAM+0FFFH
           CALL      SUB_XY
 
           HALT
 
-; STACK_INIT
-STACK_INIT:
-          LD        SP, RAM+0FFFH
-          RET
-
 ; SUB_XY
 SUB_XY:
+          PUSH      AF
           PUSH      DE
           PUSH      HL
+
+          ; AND命令が呼ばれるとCフラグはリセットされる
+          LD        A, 00H
+          AND       A
 
           LD        HL, (X)
           LD        DE, (Y)
           SBC       HL, DE
-          LD        (Z),HL
+          LD        (X),HL
           
           POP       HL
           POP       DE
+          POP       AF
           RET
 
           END
