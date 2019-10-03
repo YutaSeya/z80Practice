@@ -22,9 +22,9 @@ STACK_INIT:
           RET
 
 MUL_XY:
-          POP       HL
-          POP       DE
-          POP       BC
+          PUSH      BC
+          PUSH      DE
+          PUSH      HL
 
           LD        BC, (Y)
           LD        DE, (X)
@@ -45,9 +45,9 @@ MUL_LOOP:
 
           LD        (Z), HL
 
-          PUSH      BC
-          PUSH      DE
-          PUSH      HL
+          POP       HL
+          POP       DE
+          POP       BC
           RET
 
 ADD_HL:

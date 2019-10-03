@@ -25,30 +25,30 @@ STACK_INIT:
 
 ;ADD_XY
 ADD_XY:
-          POP       HL
-          POP       DE
+          PUSH      DE
+          PUSH      HL
 
           LD        HL, (X)
           LD        DE, (Y)
           ADD       HL, DE
           LD        (Z),HL
           
-          PUSH      DE
-          PUSH      HL
+          POP       HL
+          POP       DE
           RET
 
 ; ADD_Z
 ADD_Z:
-          POP       HL
-          POP       DE
-
+          PUSH      DE
+          PUSH      HL    
+          
           LD        HL, (X)
           LD        DE, (Z)
           ADD       HL, DE
-          LD        (Z),HL
-          
-          PUSH      DE
-          PUSH      HL      
+          LD        (Z),HL          
+  
+          POP       HL
+          POP       DE
           RET
 
           END

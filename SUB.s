@@ -23,16 +23,16 @@ STACK_INIT:
 
 ; SUB_XY
 SUB_XY:
-          POP       HL
-          POP       DE
+          PUSH      DE
+          PUSH      HL
 
           LD        HL, (X)
           LD        DE, (Y)
           SBC       HL, DE
           LD        (Z),HL
           
-          PUSH      DE
-          PUSH      HL
+          POP       HL
+          POP       DE
           RET
 
           END
