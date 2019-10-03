@@ -33,8 +33,8 @@ ADD_XY:
           ADD       HL, DE
           LD        (Z),HL
           
-          PUSH      HL
           PUSH      DE
+          PUSH      HL
           RET
 
 ; ADD_Z
@@ -47,8 +47,8 @@ ADD_Z:
           ADD       HL, DE
           LD        (Z),HL
           
-          PUSH      HL
-          PUSH      DE      
+          PUSH      DE
+          PUSH      HL      
           RET
 
           END

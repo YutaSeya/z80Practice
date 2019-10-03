@@ -31,8 +31,8 @@ SUB_XY:
           SBC       HL, DE
           LD        (Z),HL
           
-          PUSH      HL
           PUSH      DE
+          PUSH      HL
           RET
 
           END
