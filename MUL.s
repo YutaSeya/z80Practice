@@ -37,10 +37,11 @@ MUL_LOOP:
           ; BCレジスタを左にシフト
           SLA       C
           RL        B
-          ; Cレジスタの値を減らす
-          DEC       A
 
           CALL      C, ADD_HL
+          
+          ; Aレジスタの値を減らす
+          DEC       A
 
           JP        NZ, MUL_LOOP
 
