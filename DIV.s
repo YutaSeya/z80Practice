@@ -37,9 +37,7 @@ DIV_XY:
 
           ; 0で割ることはできないのでerror
           ; ひとまずエラーをしらせるため0xffffをいれる
-          LD        HL, 0FFFFH
-          LD        (X),HL
-          HALT
+          JP        DIV_OVERFLOW
 
 DIV_START_UP:
           LD        BC, 0000H
@@ -72,6 +70,11 @@ DIV_END_ACTION:
 
           LD        (X),DE
 
+          ; オーバーフロー処理
+          LD        A, D
+          CP        28H  
+          JP        P, DIV_OVERFLOW    
+
           POP       AF
           POP       DE
           POP       BC
@@ -102,5 +105,10 @@ DIV_CHECK_LOOP_COUNT:
           JP        NZ, DIV_LOOP
 
           JP        DIV_END_ACTION        
+
+DIV_OVERFLOW:
+          LD        HL, 0FFFFH
+          LD        (X), HL
+          HALT  
 
           END

@@ -29,11 +29,23 @@ SUB_XY:
           LD        HL, (X)
           LD        DE, (Y)
           SBC       HL, DE
+
           LD        (X),HL
+          
+          ; オーバーフロー処理
+          JP        M, SUB_OVERFLOW
+          LD        A, H
+          CP        28H  
+          JP        P, SUB_OVERFLOW
           
           POP       HL
           POP       DE
           POP       AF
           RET
+
+SUB_OVERFLOW:
+          LD        HL, 0FFFFH
+          LD        (X), HL
+          HALT 
 
           END

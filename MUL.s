@@ -32,7 +32,8 @@ MUL_LOOP:
           SLA       L
           RL        H
 
-          ; overflow
+          ; オーバーフロー処理
+          JP        C, MUL_OVERFLOW
 
           ; BCレジスタを左にシフト
           SLA       C
@@ -47,6 +48,11 @@ MUL_LOOP:
 
           LD        (X), HL
 
+          ; オーバーフロー処理
+          LD        A, H
+          CP        28H  
+          JP        P, MUL_OVERFLOW    
+
           POP       HL
           POP       DE
           POP       BC
@@ -56,6 +62,11 @@ MUL_LOOP:
 ADD_HL:
           ADD       HL, DE
           RET
+
+MUL_OVERFLOW:
+          LD        HL, 0FFFFH
+          LD        (X), HL
+          HALT  
 
           END
 
