@@ -24,36 +24,47 @@ DIV_XY:
           PUSH      DE
           PUSH      AF
 
-          LD        BC, 0000H
+
           LD        HL,(Y)
 
-          LD        A, H
-          CP        0000H
+          LD        A, L
+          CP        000H
           JP        NZ, DIV_START_UP
 
-          LD        A, L
-          CP        0000H
+          LD        A, H
+          CP        000H
           JP        NZ, DIV_START_UP
 
           ; 0で割ることはできないのでerror
+          ; ひとまずエラーをしらせるため0xffffをいれる
+          LD        HL, 0FFFFH
+          LD        (X),HL
+          HALT
 
 DIV_START_UP:
-          LD        HL,(Y)
+          LD        BC, 0000H
           LD        A, 10H
 
 DIV_LOOP:
+          LD        HL,(Y)
+
           SRA       H
           RR        L
 
           RR        B
           RR        C
 
-          LD        HL,(Y)
+          LD        (Y), HL
           ; Zフラグをたたせるため
           DEC       H
           INC       H
 
-          JP        NZ, DIV_CHECK_NONZERO
+          JP        NZ, DIV_EXCEPTION_ACTION
+          DEC       L
+          INC       L
+          JP        NZ, DIV_EXCEPTION_ACTION
+
+          JP        DIV_DIFFERENCE_CHECK
 
 DIV_END_ACTION:
           LD        HL,(X)
@@ -66,13 +77,6 @@ DIV_END_ACTION:
           POP       BC
           POP       HL
           RET
-
-DIV_CHECK_NONZERO:
-          ;Zフラグ立つかどうか確認
-          DEC       L
-          INC       L
-          JP        NZ, DIV_EXCEPTION_ACTION
-          JP        DIV_DIFFERENCE_CHECK
 
 DIV_EXCEPTION_ACTION:
           AND       A
