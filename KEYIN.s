@@ -13,6 +13,13 @@ LED_2:          DS          1
 LED_3:          DS          1
 LED_4:          DS          1
 
+MODE:           DS          1
+; MODE0 入力なし MODE1 入力1 演算子入力完了
+; MODE1 足し算,  MODE2 引き算 
+; MODE3 かけ算,  MODE4 割り算
+
+
+
                 ORG         ROM
 
                 LD          SP, RAM+0FFFH
@@ -21,7 +28,7 @@ LED_4:          DS          1
 
                 CALL        LED_CLEAR
 
-                JP          MAIN
+                JP          NUM_IN
 
 ; PIO_INIT
 PIO_INIT: 
@@ -55,11 +62,120 @@ LED_CLEAR:
           OUT         (PIO_AD),A
           RET
 
-MAIN:           
+NUM_IN:    
+           ; 一つ目の数字と演算子が入力されるまでループ       
+          JP         INPUT_FIRST_NUMBER_OPE
+INPUT_NUM2:
+          JP         INPUT_SEDOND_NUMBER_CALC
+          JP         NUM_IN
 
+
+INPUT_FIRST_NUMBER_OPE:
                 CALL        KEY_IN
-                CALL        L_SHIFT
-                JP          MAIN
+                ; ここで入力されたキーによって処理を変えるようにすればよい
+                CP          00AH
+                JP          Z, INPUT_C_BUTTON 
+
+                ; オペランドの入力確認を行う
+                ; = のとき無視
+                CP          00BH
+                JP          Z, INPUT_FIRST_NUMBER_OPE
+                ; + のとき
+                CP          00CH
+                JP          Z, INPUT_ADD_OPE:
+
+                ; - のとき
+                CP          00DH
+                JP          Z, INPUT_SUB_OPE:
+
+                ; * のとき
+                CP          00EH
+                JP          Z, INPUT_MUL_OPE:
+
+                ; / のとき
+                CP          00FH
+                JP          Z, INPUT_DIV_OPE:
+                
+                ; 数字だったときの処理
+                LD          B, A
+                LD          A, (LED_4)
+                CP          000H 
+                LD          A, B
+                JP          Z, OVERWRITE_FIRST_PLACE_NUM1
+                CALL        NZ, L_SHIFT
+                JP          INPUT_FIRST_NUMBER_OPE
+
+INPUT_SEDOND_NUMBER_CALC:
+                CALL        KEY_IN
+                ; ここで入力されたキーによって処理を変えるようにすればよい
+                CP          00AH
+                JP          Z, INPUT_C_BUTTON 
+
+                ; オペランドの入力確認を行う
+                ; = のとき
+                CP          00BH
+                JP          Z, ENDP
+                ; + , -, * , /のとき無視
+                CP          00CH
+                JP          P, INPUT_SEDOND_NUMBER_CALC
+                ; 数字だったときの処理
+                LD          B, A
+                LD          A, (LED_4)
+                CP          000H 
+                LD          A, B
+                JP          Z, OVERWRITE_FIRST_PLACE_NUM2
+                CALL        NZ, L_SHIFT
+                JP          INPUT_SEDOND_NUMBER_CALC
+
+
+; HALTして確認する用途で作成
+ENDP:
+                ;+以上のとき
+                ;CP          00CH
+                ;JP          P, ENDP
+                HALT
+
+INPUT_C_BUTTON: 
+                LD          A, 000H
+                LD          (MODE), A
+                CALL        LED_CLEAR
+                JP          NUM_IN
+
+INPUT_ADD_OPE:
+                LD          A, 002H
+                LD          (MODE),A
+                ; 数値の保存をする必要あり
+                CALL        LED_CLEAR
+                JP          INPUT_NUM2
+
+INPUT_SUB_OPE:  
+                LD          A, 003H
+                LD          (MODE),A
+                ; 数値の保存をする必要あり
+                CALL        LED_CLEAR
+                JP          INPUT_NUM2
+
+INPUT_MUL_OPE:  
+                LD          A, 004H
+                LD          (MODE),A
+                ; 数値の保存をする必要あり
+                CALL        LED_CLEAR
+                JP          INPUT_NUM2
+
+INPUT_DIV_OPE:
+                LD          A, 005H
+                LD          (MODE),A
+                ; 数値の保存をする必要あり
+                CALL        LED_CLEAR
+                JP          INPUT_NUM2               
+
+OVERWRITE_FIRST_PLACE_NUM1:
+                LD          (LED_4), A         
+                JP          INPUT_FIRST_NUMBER_OPE
+
+OVERWRITE_FIRST_PLACE_NUM2:
+                LD          (LED_4), A         
+                JP          INPUT_SEDOND_NUMBER_CALC
 
 L_SHIFT:
                 LD          B,A
