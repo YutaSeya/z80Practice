@@ -51,11 +51,6 @@ ADD_Z:
 
           ADD       HL, DE
           LD        (Z),HL    
-
-          ; オーバーフロー処理
-          LD        A, H
-          CP        28H  
-          JP        P, ADD_OVERFLOW    
   
           POP       HL
           POP       DE

@@ -1,7 +1,7 @@
 ROM       EQU       0000H
 RAM       EQU       8000H
 
-ORG       RAM       
+          ORG       RAM       
 X:        DS        2
 
 Y:        DS        2

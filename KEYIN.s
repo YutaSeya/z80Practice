@@ -53,11 +53,10 @@ PIO_INIT:
           RET
 
 LED_CLEAR:
-          LD          A,00AH
+          LD          A,000H
           LD          (LED_1), A
           LD          (LED_2), A
           LD          (LED_3), A
-          LD          A,000H
           LD          (LED_4), A
           OUT         (PIO_AD),A
           RET
