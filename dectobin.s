@@ -2,17 +2,17 @@
 ROM       EQU       0000H
 RAM       EQU       8000H
 
-          ORG       RAM    
-LED_1:    DS        1
-LED_2:    DS        1
-LED_3:    DS        1
-LED_4:    DS        1   
+          ORG       RAM   
 X:        DS        2
 
 Y:        DS        2
 
 Z:        DS        2
 
+LED_1:    DS        1
+LED_2:    DS        1
+LED_3:    DS        1
+LED_4:    DS        1   
 
 
 ; MAIN 
@@ -26,6 +26,15 @@ Z:        DS        2
           LD        (LED_3), A
           LD        (LED_4), A
           CALL      DECTOBIN
+          LD        HL, (Z)
+          LD        (X), HL
+          LD        A, 0FFH
+          LD        (LED_1), A
+          LD        (LED_2), A
+          LD        (LED_3), A
+          LD        (LED_4), A
+
+          CALL      BINTODEC
 
           HALT
 

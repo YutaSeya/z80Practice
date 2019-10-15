@@ -20,6 +20,7 @@ MODE:           DS          1
 
 
 
+
                 ORG         ROM
 
                 LD          SP, RAM+0FFFH
@@ -29,7 +30,6 @@ MODE:           DS          1
                 CALL        LED_CLEAR
 
                 JP          NUM_IN
-
 ; PIO_INIT
 PIO_INIT: 
           LD A,0CFH
