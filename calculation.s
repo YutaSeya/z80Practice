@@ -27,10 +27,19 @@ MODE:           DS          1
 ; MAIN
                 ORG         ROM
 
+                DI
+
                 LD          SP, RAM+0FFFH
 
                 CALL        PIO_INIT
 
+                JP          MAIN
+
+                ORG        0066H
+                RETN
+
+                ORG         0070H
+MAIN:
                 CALL        LED_CLEAR
 
                 JP          NUM_IN
